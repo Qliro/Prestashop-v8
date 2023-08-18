@@ -1,0 +1,32 @@
+8.0.0 - 20230420
++Tested for Prestashop 8.0.x
+~Improved layout in BO for PS 8 compatibility.
+~Improved newsletter signup feature.
+
+1.0.8
+Changed to name of discount on order rows.
+
+1.0.7
+Fixed invoice fee product.
+
+1.0.6
+Added cleaning of special chars from references.
+
+1.0.5
+Added support for Upsell
+Added support for Update Merchant Reference
+
+1.0.4
+Upgraded to api V2
+
+1.0.3
+Fix for update of shipping options
+
+1.0.2
+Design option (one-two column)
+
+1.0.1
+Fix for payment being created twice if same request comes in at the exact same time
+
+1.0.0
+First version uploaded on GitHub
