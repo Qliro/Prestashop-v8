@@ -79,4 +79,9 @@ class Pw_qlirocheckoutOrdervalidationModuleFrontController extends ModuleFrontCo
             }
         }
     }
+
+    protected function displayMaintenancePage()
+    {
+        return;
+    }
 }

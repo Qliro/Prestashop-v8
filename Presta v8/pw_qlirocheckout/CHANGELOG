@@ -1,3 +1,16 @@
+8.0.4 - 20240604
+~ Fixed some design issues with PS 8.1
++ Made it possible to Test orders when shop is in maintenance mode.
+
+8.0.3 - 20240208
+~ Fixed issue with pregreplace pattern and unicode.
+
+8.0.2 - 20231228
+~ Fixed issue where tmp address could be locked to the wrong country.
+
+8.0.1 - 20231219
+~ Fixed notices on confirmation page regarding upsell.
+
 8.0.0 - 20230420
 +Tested for Prestashop 8.0.x
 ~Improved layout in BO for PS 8 compatibility.

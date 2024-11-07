@@ -85,4 +85,9 @@ class Pw_qlirocheckoutOrderavailableshippingmethodsModuleFrontController extends
             }
         }
     }
+
+    protected function displayMaintenancePage()
+    {
+        return;
+    }
 }

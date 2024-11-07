@@ -27,7 +27,7 @@ class Pw_qlirocheckout extends PaymentModule
     {
         $this->name = 'pw_qlirocheckout';
         $this->tab = 'payments_gateways';
-        $this->version = '8.0.0';
+        $this->version = '8.0.4';
         $this->author = 'Prestaworks AB';
         $this->need_instance = 0;
         $this->bootstrap = true;
@@ -37,7 +37,7 @@ class Pw_qlirocheckout extends PaymentModule
         $this->displayName = $this->l('Qliro Checkout');
         $this->description = $this->l('Payment module with Qliro Checkout, integrated by Prestaworks AB');
 
-        $this->ps_versions_compliancy = array('min' => '1.8.0', 'max' => '8.0.99');
+        $this->ps_versions_compliancy = array('min' => '1.8.0', 'max' => '8.99.99');
         
         $this->confirmUninstall = $this->l('Are you sure you want to uninstall Qliro Checkout?');
     }
@@ -2206,7 +2206,8 @@ class Pw_qlirocheckout extends PaymentModule
                 $row = array();
 
                 $merchant_reference = $discount['name'];
-                $merchant_reference = preg_replace('~[^\p{L}\p{N}]~', ' ', $merchant_reference);
+                // $merchant_reference = preg_replace('~[^\p{L}\p{N}]~', ' ', $merchant_reference);
+                $merchant_reference = preg_replace("/[^[:alnum:][:space:]]/u", '', $merchant_reference);
                 if (strlen($merchant_reference > 200)) {
                     $merchant_reference = mb_substr($merchant_reference, 0, 50);
                 }
@@ -2238,7 +2239,8 @@ class Pw_qlirocheckout extends PaymentModule
                 $wrapping_cost_incl = $this->context->cart->getOrderTotal(true, Cart::ONLY_WRAPPING);
                 
                 $merchant_reference = $this->l('Gift Wrapping');
-                $merchant_reference = preg_replace('~[^\p{L}\p{N}]~', ' ', $merchant_reference);
+                // $merchant_reference = preg_replace('~[^\p{L}\p{N}]~', ' ', $merchant_reference);
+                $merchant_reference = preg_replace("/[^[:alnum:][:space:]]/u", '', $merchant_reference);
                 
                 $row['MerchantReference']  = $merchant_reference;
                 $row['Type']               = 'Product';
@@ -2711,6 +2713,23 @@ class Pw_qlirocheckout extends PaymentModule
             default:
                 return $value;
         }
+    }
+    
+    //check if address is correct country
+    public function checkQliroAddress($id_address, $iso_code)
+    {
+        $address = new Address((int) $id_address);
+        if ($address->id <= 0) {
+            return false;
+        }
+        if ($address->id_customer > 0) {
+            return false;
+        }
+        $country = new Country($address->id_country);
+        if (strtolower($country->iso_code) != strtolower($iso_code)) {
+            return false;
+        }
+        return true;
     }
     
     // Create a new address for the customer
