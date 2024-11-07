@@ -25,6 +25,9 @@ if (Tools::isSubmit('qliro_change_country')) {
         $id_currency  = Currency::getIdByIsoCode('SEK');
         
         $id_address_delivery = Configuration::get('QLIRO_SE_ADDRESS');
+        if (!$this->module->checkQliroAddress($id_address_delivery, Tools::getValue('qliro_change_country'))) {
+            unset($id_address_delivery);
+        }
         
         if (!isset($id_address_delivery) OR ($id_address_delivery <= 0)) {
             $this->module->installAddress('SE', 'QLIRO_SE_ADDRESS');
@@ -39,6 +42,9 @@ if (Tools::isSubmit('qliro_change_country')) {
         $id_currency = Currency::getIdByIsoCode('NOK');
         
         $id_address_delivery = Configuration::get('QLIRO_NO_ADDRESS');
+        if (!$this->module->checkQliroAddress($id_address_delivery, Tools::getValue('qliro_change_country'))) {
+            unset($id_address_delivery);
+        }
         
         if (!isset($id_address_delivery) OR ($id_address_delivery <= 0)) {
             $this->module->installAddress('NO', 'QLIRO_NO_ADDRESS');
@@ -53,6 +59,9 @@ if (Tools::isSubmit('qliro_change_country')) {
         $id_currency = Currency::getIdByIsoCode('DKK');
         
         $id_address_delivery = Configuration::get('QLIRO_DK_ADDRESS');
+        if (!$this->module->checkQliroAddress($id_address_delivery, Tools::getValue('qliro_change_country'))) {
+            unset($id_address_delivery);
+        }
         
         if (!isset($id_address_delivery) OR ($id_address_delivery <= 0)) {
             $this->module->installAddress('DK', 'QLIRO_DK_ADDRESS');
@@ -67,6 +76,9 @@ if (Tools::isSubmit('qliro_change_country')) {
         $id_currency = Currency::getIdByIsoCode('EUR');
         
         $id_address_delivery = Configuration::get('QLIRO_FI_ADDRESS');
+        if (!$this->module->checkQliroAddress($id_address_delivery, Tools::getValue('qliro_change_country'))) {
+            unset($id_address_delivery);
+        }
         
         if (!isset($id_address_delivery) OR ($id_address_delivery <= 0)) {
             $this->module->installAddress('FI', 'QLIRO_FI_ADDRESS');
@@ -83,6 +95,9 @@ if (Tools::isSubmit('qliro_change_country')) {
         $id_currency = $country->id_currency;
         
         $id_address_delivery = Configuration::get('QLIRO_'.Tools::getValue('qliro_change_country').'_ADDRESS');
+        if (!$this->module->checkQliroAddress($id_address_delivery, Tools::getValue('qliro_change_country'))) {
+            unset($id_address_delivery);
+        }
         
         if (!isset($id_address_delivery) OR ($id_address_delivery <= 0)) {
             $this->module->installAddress(Tools::getValue('qliro_change_country'), 'QLIRO_'.Tools::getValue('qliro_change_country').'_ADDRESS');

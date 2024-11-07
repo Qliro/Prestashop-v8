@@ -65,4 +65,9 @@ class Pw_qlirocheckouthandleshippingoptionchangesModuleFrontController extends M
         
         die(json_encode($cart));
     }
+
+    protected function displayMaintenancePage()
+    {
+        return;
+    }
 }

@@ -115,7 +115,11 @@ class Pw_qlirocheckoutConfirmationModuleFrontController extends ModuleFrontContr
                     $total_payed                = $qliro_one_checkout_information->TotalPrice;
                     $payment_name               = $qliro_one_checkout_information->PaymentMethod->PaymentMethodName;
                     $country                    = $qliro_one_checkout_information->Country;
-                    $qliro_upsell               = $qliro_one_checkout_information->Upsell;
+                    if (isset($qliro_one_checkout_information->Upsell)) {
+                        $qliro_upsell               = $qliro_one_checkout_information->Upsell;    
+                    } else {
+                        $qliro_upsell = [];
+                    }
                     
                     $ps_id_order = $this->module->createOrder($qliro_one_checkout_order_id, $qliro_one_merchant_reference, $qliro_customer_checkout_status, $qliro_one_customer, $qliro_one_billing_address, $qliro_one_shipping_address, $qliro_one_order_items, $total_payed, $country_iso_code, $qliro_country_id, $payment_name, $id_cart, $id_shop, $customer_signup_for_newsletter);
                     
@@ -135,7 +139,7 @@ class Pw_qlirocheckoutConfirmationModuleFrontController extends ModuleFrontContr
                     }
                     $this->context->smarty->assign(array(
                         'cart_qties' => 0,
-                        'cart' => $this->context->cart,
+                        // 'cart' => $this->context->cart,
                         'qliro_upsell' => $this->getUpsellItems($upsell_cart, $qliro_one_checkout_information, $upsell_max_price),
                         'qliro_upsell_info' => $qliro_upsell,
                     ));
@@ -155,7 +159,11 @@ class Pw_qlirocheckoutConfirmationModuleFrontController extends ModuleFrontContr
                 $total_payed                = $qliro_one_checkout_information->TotalPrice;
                 $payment_name               = $qliro_one_checkout_information->PaymentMethod->PaymentMethodName;
                 $country                    = $qliro_one_checkout_information->Country;
-                $qliro_upsell               = $qliro_one_checkout_information->Upsell;
+                if (isset($qliro_one_checkout_information->Upsell)) {
+                    $qliro_upsell               = $qliro_one_checkout_information->Upsell;    
+                } else {
+                    $qliro_upsell = [];
+                }
                 
                 //$ps_id_order = $this->module->createOrder($qliro_one_checkout_order_id, $qliro_one_merchant_reference, $qliro_customer_checkout_status, $qliro_one_customer, $qliro_one_billing_address, $qliro_one_shipping_address, $qliro_one_order_items, $total_payed, $country_iso_code, $qliro_country_id, $payment_name, $id_cart, $id_shop, $customer_signup_for_newsletter);
                 
@@ -175,8 +183,8 @@ class Pw_qlirocheckoutConfirmationModuleFrontController extends ModuleFrontContr
                 }
                 $this->context->smarty->assign(array(
                     'cart_qties' => 0,
-                    'cart' => $this->context->cart,
-                    'qliro_upsell' => $qliro_upsell->IsUpsellOrder ? false : $this->getUpsellItems($upsell_cart, $qliro_one_checkout_information, $upsell_max_price),
+                    // 'cart' => $this->context->cart,
+                    'qliro_upsell' => isset($qliro_one_checkout_information->Upsell) ? false : $this->getUpsellItems($upsell_cart, $qliro_one_checkout_information, $upsell_max_price),
                     'qliro_upsell_info' => $qliro_upsell,
                 ));
                 

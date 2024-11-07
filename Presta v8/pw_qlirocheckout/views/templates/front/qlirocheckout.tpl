@@ -199,7 +199,7 @@
       <div class="hx-co-loader" id="summary_loader" style="display: none;">
         <div class="loader loader-sm loader__checkout-start"></div>
       </div> 
-      <div id="changes_out_of_stock_qliro" style="display:{if isset($pwc_available_product) AND $pwc_available_product=='no'}none{else}block{/if}">
+      <div id="changes_out_of_stock_qliro" class="container" style="display:{if isset($pwc_available_product) AND $pwc_available_product=='no'}none{else}block{/if}">
         {if isset($two_columns_layout) && $two_columns_layout}
           <div id="dynamic_changes" class="col-12 col-xs-12 col-md-5">
             {$smarty.capture.qliroCountries nofilter}
@@ -213,17 +213,15 @@
         {else}
           <div id="dynamic_changes" class="dynamic-content">
             <div class="col-xs-12">
-              <div class="row">
-                <div class="cart-grid-body col-xs-12 col-md-4" style="margin: 0;">
+                <div class="cart-grid-body" style="margin: 0;">
                   {$smarty.capture.qliroCountries nofilter}
                 </div>
-                <div class="col-xs-12 col-md-{if $giftAllowed==1}4{else}8{/if}">
+                <div>
                   {$smarty.capture.qliroMessage nofilter}
                 </div>
-                <div class="col-xs-12 col-md-4">
+                <div>
                 {$smarty.capture.qliroGift nofilter}
                 </div>
-              </div>
             </div>
           </div>
           <div class="col-xs-12">
