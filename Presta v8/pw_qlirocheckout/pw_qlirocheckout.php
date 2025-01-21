@@ -27,7 +27,7 @@ class Pw_qlirocheckout extends PaymentModule
     {
         $this->name = 'pw_qlirocheckout';
         $this->tab = 'payments_gateways';
-        $this->version = '8.0.4';
+        $this->version = '8.0.5';
         $this->author = 'Prestaworks AB';
         $this->need_instance = 0;
         $this->bootstrap = true;
@@ -52,7 +52,7 @@ class Pw_qlirocheckout extends PaymentModule
         $this->createStatuses();
         
         if (!parent::install()
-            || !$this->registerHook('header')
+            || !$this->registerHook('displayHeader')
             || !$this->registerHook('displayAdminOrder')
             || !$this->registerHook('actionOrderStatusUpdate')
             || !$this->registerHook('displayPayment')
@@ -1021,7 +1021,7 @@ class Pw_qlirocheckout extends PaymentModule
         return true;
     }
 
-    public function hookHeader()
+    public function hookDisplayHeader()
     {
 		if ((int)Configuration::get('QLIRO_ACTIVE')) {
             $qliro_checkout_url = $this->context->link->getModuleLink($this->name, 'checkout', array(), true);
