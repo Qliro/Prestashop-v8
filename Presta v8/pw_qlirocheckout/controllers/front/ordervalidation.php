@@ -56,6 +56,10 @@ class Pw_qlirocheckoutOrdervalidationModuleFrontController extends ModuleFrontCo
                 }
             
                 $cart = new Cart($id_cart);
+                if ($cart->id_customer > 0) {
+                    $customer = new Customer($cart->id_customer);
+                    $this->context->customer = $customer;
+                }
                 
                 $all_in_stock = true;
                 $check_cart = $cart->checkQuantities(false);
