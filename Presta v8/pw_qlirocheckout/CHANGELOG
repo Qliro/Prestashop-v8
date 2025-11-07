@@ -1,3 +1,6 @@
+8.0.6 - 20251107
+~ Fix for cart not using proper customer when checking available stock.
+
 8.0.5 - 20250121
 ~ Added css and js files for override possibilities.
 ~ Renamed hook header to displayHeader.
