@@ -27,7 +27,7 @@ class Pw_qlirocheckout extends PaymentModule
     {
         $this->name = 'pw_qlirocheckout';
         $this->tab = 'payments_gateways';
-        $this->version = '8.0.6';
+        $this->version = '8.0.7';
         $this->author = 'Prestaworks AB';
         $this->need_instance = 0;
         $this->bootstrap = true;
@@ -1307,6 +1307,7 @@ class Pw_qlirocheckout extends PaymentModule
             $to_return['response_code'] = $response_code;
             
             $message = '';
+            $reference = '';
             
             if ($response_code == 200 OR $response_code == 201) {
                 $response_message = $response;
@@ -1315,7 +1316,6 @@ class Pw_qlirocheckout extends PaymentModule
                 $response_message = @$response->ErrorCode;
                 $message          = @$response->ErrorMessage;
                 $reference        = @$response->ErrorReference;
-                
             }
             
             $to_return['response']  = $response_message;
