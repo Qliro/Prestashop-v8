@@ -27,7 +27,7 @@ class Pw_qlirocheckout extends PaymentModule
     {
         $this->name = 'pw_qlirocheckout';
         $this->tab = 'payments_gateways';
-        $this->version = '8.0.7';
+        $this->version = '8.0.8';
         $this->author = 'Prestaworks AB';
         $this->need_instance = 0;
         $this->bootstrap = true;
@@ -1129,21 +1129,21 @@ class Pw_qlirocheckout extends PaymentModule
                             
                             if (is_array($mark_item_as_shipped_result) AND ($mark_item_as_shipped_result['response_code'] == 200 OR $mark_item_as_shipped_result['response_code'] == 201)) {
                                 $PaymentTransactions = @$mark_item_as_shipped_result['response']->PaymentTransactions;
-                                foreach ($PaymentTransactions as $key => $PaymentTransaction) {
-                                    Db::getInstance()->insert('qlirocheckout_payment_transactions',
-                                    [
-                                        'ps_id_order' => $order_id,
-                                        'PaymentTransactionId' => $PaymentTransaction->PaymentTransactionId,
-                                        'Status' => $PaymentTransaction->Status,
-                                        'PaymentType' => 'Capture',
-                                    ]);
-                                    $PaymentTransactionId = $PaymentTransaction->PaymentTransactionId;
-                                    $this->addOrderMessage('QLIRO capture request sent, paymentTransactionId is '.$PaymentTransactionId, $order_id);
+                                if (is_array($PaymentTransactions)) {
+                                    foreach ($PaymentTransactions as $key => $PaymentTransaction) {
+                                        Db::getInstance()->insert('qlirocheckout_payment_transactions',
+                                        [
+                                            'ps_id_order' => $order_id,
+                                            'PaymentTransactionId' => $PaymentTransaction->PaymentTransactionId,
+                                            'Status' => $PaymentTransaction->Status,
+                                            'PaymentType' => 'Capture',
+                                        ]);
+                                        $PaymentTransactionId = $PaymentTransaction->PaymentTransactionId;
+                                        $this->addOrderMessage('QLIRO capture request sent, paymentTransactionId is '.$PaymentTransactionId, $order_id);
+                                    }
                                 }
                                 
                                 Db::getInstance()->execute("UPDATE "._DB_PREFIX_."qlirocheckout SET paymentTransactionId = '".$PaymentTransactionId."' WHERE qliro_order_id = ".$OrderId." AND ps_id_order = ".$order_id."");
-                                
-
                                 
                             } else {
                                 
@@ -1160,15 +1160,17 @@ class Pw_qlirocheckout extends PaymentModule
                             if (is_array($cancel_order_result) AND ($cancel_order_result['response_code'] == 200 OR $cancel_order_result['response_code'] == 201)) {
                                 
                                 $PaymentTransactions = @$cancel_order_result['response']->PaymentTransactions;
-                                foreach ($PaymentTransactions as $PaymentTransaction) {
-                                    Db::getInstance()->insert('qlirocheckout_payment_transactions',
-                                    [
-                                        'ps_id_order' => $order_id,
-                                        'PaymentTransactionId' => $PaymentTransaction->PaymentTransactionId,
-                                        'Status' => $PaymentTransaction->Status,
-                                        'PaymentType' => 'Reversal',
-                                    ]);
-                                    $PaymentTransactionId = $PaymentTransaction->PaymentTransactionId;
+                                if (is_array($PaymentTransactions)) {
+                                    foreach ($PaymentTransactions as $PaymentTransaction) {
+                                        Db::getInstance()->insert('qlirocheckout_payment_transactions',
+                                        [
+                                            'ps_id_order' => $order_id,
+                                            'PaymentTransactionId' => $PaymentTransaction->PaymentTransactionId,
+                                            'Status' => $PaymentTransaction->Status,
+                                            'PaymentType' => 'Reversal',
+                                        ]);
+                                        $PaymentTransactionId = $PaymentTransaction->PaymentTransactionId;
+                                    }
                                 }
                                 
                                 Db::getInstance()->execute("UPDATE "._DB_PREFIX_."qlirocheckout SET paymentTransactionId = '".$PaymentTransactionId."' WHERE qliro_order_id = ".$OrderId." AND ps_id_order = ".$order_id."");
