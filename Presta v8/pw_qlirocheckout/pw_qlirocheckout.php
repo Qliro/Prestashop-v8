@@ -27,7 +27,7 @@ class Pw_qlirocheckout extends PaymentModule
     {
         $this->name = 'pw_qlirocheckout';
         $this->tab = 'payments_gateways';
-        $this->version = '8.0.8';
+        $this->version = '8.0.9';
         $this->author = 'Prestaworks AB';
         $this->need_instance = 0;
         $this->bootstrap = true;
@@ -2171,6 +2171,7 @@ class Pw_qlirocheckout extends PaymentModule
         
         $rows = array();
         
+        $highest_vat = 0;
         // PRODUCTS
         $products = $cart->getProducts();
         foreach ($products as $product) {
@@ -2188,15 +2189,21 @@ class Pw_qlirocheckout extends PaymentModule
             
             $type               = 'Product';
             $quantity           = (int)$product['cart_quantity'];
+            $vat                = $product['rate'];
             $pricePerItemIncVat = $this->qlirocheckoutRound($product['price_with_reduction']);
             $pricePerItemExVat  = $this->qlirocheckoutRound($product['price_with_reduction_without_tax']);
             
             $row['MerchantReference']  = $merchant_reference;
             $row['Type']               = $type;
+            $row['VatRate']            = $vat;
             $row['Quantity']           = $quantity;
             $row['PricePerItemIncVat'] = $pricePerItemIncVat;
             $row['PricePerItemExVat']  = $pricePerItemExVat;
             $row['Description']        = $description;
+            
+            if ($row['VatRate'] > $highest_vat) {
+                $highest_vat = $row['VatRate'];
+            }
             
             $rows[] = $row;
         }
@@ -2220,6 +2227,7 @@ class Pw_qlirocheckout extends PaymentModule
                 
                 $row['MerchantReference']  = $merchant_reference;
                 $row['Type']               = $type;
+                $row['VatRate']            = $highest_vat;
                 $row['Quantity']           = $quantity;
                 $row['PricePerItemIncVat'] = $pricePerItemIncVat;
                 $row['PricePerItemExVat']  = $pricePerItemExVat;
@@ -2247,6 +2255,7 @@ class Pw_qlirocheckout extends PaymentModule
                 $row['MerchantReference']  = $merchant_reference;
                 $row['Type']               = 'Product';
                 $row['Quantity']           = 1;
+                $row['VatRate']            = $highest_vat;
                 $row['PricePerItemIncVat'] = $wrapping_cost_incl;
                 $row['PricePerItemExVat']  = $wrapping_cost_excl;
                 $row['Description']        = $this->l('Gift Wrapping');
@@ -2256,6 +2265,7 @@ class Pw_qlirocheckout extends PaymentModule
         }
         return $rows;
     }
+
     
     // Function that returns available shipping methods
     public function getQliroAvailableShippingMethods(Cart $cart, $country_iso)
