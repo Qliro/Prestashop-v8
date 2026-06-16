@@ -1,0 +1,1 @@
+<div class="alert alert-success my-0">{l s='The item has been added to the order' mod='pw_qlirocheckout'}</div>

@@ -1,0 +1,64 @@
+9.0.0 - 20260616
++ Tested for Prestashop 9
+
+8.0.9 - 20260313
+~ Added vat rate to data.
+
+8.0.8 - 20260213
+~ Fixed warnings of missing array of payments.
+
+8.0.7 - 20260210
+~ Fixed warnings of missing variable values.
+
+8.0.6 - 20251107
+~ Fix for cart not using proper customer when checking available stock.
+
+8.0.5 - 20250121
+~ Added css and js files for override possibilities.
+~ Renamed hook header to displayHeader.
+
+8.0.4 - 20240604
+~ Fixed some design issues with PS 8.1
++ Made it possible to Test orders when shop is in maintenance mode.
+
+8.0.3 - 20240208
+~ Fixed issue with pregreplace pattern and unicode.
+
+8.0.2 - 20231228
+~ Fixed issue where tmp address could be locked to the wrong country.
+
+8.0.1 - 20231219
+~ Fixed notices on confirmation page regarding upsell.
+
+8.0.0 - 20230420
++Tested for Prestashop 8.0.x
+~Improved layout in BO for PS 8 compatibility.
+~Improved newsletter signup feature.
+
+1.0.8
+Changed to name of discount on order rows.
+
+1.0.7
+Fixed invoice fee product.
+
+1.0.6
+Added cleaning of special chars from references.
+
+1.0.5
+Added support for Upsell
+Added support for Update Merchant Reference
+
+1.0.4
+Upgraded to api V2
+
+1.0.3
+Fix for update of shipping options
+
+1.0.2
+Design option (one-two column)
+
+1.0.1
+Fix for payment being created twice if same request comes in at the exact same time
+
+1.0.0
+First version uploaded on GitHub

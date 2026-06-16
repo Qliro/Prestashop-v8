@@ -1,0 +1,103 @@
+/**
+ * Prestaworks AB
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement(EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://license.prestaworks.se/license.html
+ *
+ * @author    Prestaworks AB <info@prestaworks.se>
+ * @copyright Copyright Prestaworks AB (https://www.prestaworks.se/)
+ * @license   http://license.prestaworks.se/license.html
+ */
+
+/**
+ * Main container
+ */
+.qliro-upsell {
+    background-color: #ffffff;
+    margin-bottom: 15px;
+    padding: 15px;
+}
+
+
+
+/**
+ * Main title
+ */
+.qliro-upsell h1 {
+    margin-bottom: 15px;
+}
+
+
+
+/**
+ * Countdown
+ */
+.qliro_upsell_timer {
+    margin-bottom: 15px;
+}
+    .qliro_upsell_timer:empty {
+        display: none;
+    }
+
+
+
+/**
+ * Products
+ * Overriden since Classic contains elements which are not needed
+ * and/or not possible to override.
+ */
+.qliro-upsell .row {
+    -webkit-box-align: stretch;
+       -ms-flex-align: stretch;
+          align-items: stretch;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+    -webkit-box-pack: center;
+       -ms-flex-pack: center;
+     justify-content: center;
+    margin-bottom: -15px;
+}
+.qliro-upsell-item {
+    padding-bottom: 15px;
+}
+    .qliro-upsell-item img {
+        display: block;
+        margin-right: auto;
+        margin-left: auto;
+    }
+    .qliro-upsell-item .thumbnail-container {
+        background-color: #ffffff;
+        height: 100%;
+    }
+    .qliro-upsell-item-description {
+        padding: 15px 0 0;
+    }
+    .qliro-upsell-item .product-title,
+    .qliro-upsell-item .upsell-attribute-text,
+    .qliro-upsell-item .btn {
+        font-size: 13px;
+        font-weight: normal;
+        line-height: normal;
+        margin-top: 0;
+        margin-bottom: 10px;
+        text-transform: none;
+    }
+    .qliro-upsell-item .product-title {
+        font-weight: 700;
+    }
+    .qliro-upsell-item .btn {
+        display: block;
+        font-weight: 700;
+        margin: 0;
+        padding-left: 0;
+        padding-right: 0;
+        text-align: center;
+        width: 100%;
+    }
