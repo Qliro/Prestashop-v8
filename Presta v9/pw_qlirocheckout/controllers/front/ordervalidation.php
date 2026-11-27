@@ -31,10 +31,6 @@ class Pw_qlirocheckoutOrdervalidationModuleFrontController extends ModuleFrontCo
         $page = 'ordervalidation';
         
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            
-            $body = json_decode(file_get_contents('php://input'), true);
-            PrestaShopLogger::addLog('Qliro One: Order Validation body: ' . json_encode($body));
-            
             if (Tools::getIsset('id_cart') && Tools::getIsset('id_shop') && Tools::getIsset('token')) {
                 $id_cart = (int)Tools::getValue('id_cart');
                 $id_shop = (int)Tools::getValue('id_shop');
@@ -50,7 +46,7 @@ class Pw_qlirocheckoutOrdervalidationModuleFrontController extends ModuleFrontCo
                 
                 if ($token != $confirm_token) {
                     PrestaShopLogger::addLog('Order Validation for cartID: ' . $id_cart . '. Declined, token does not match');
-                    $this->module->resonse(400, $page, [
+                    $this->module->response(400, $page, [
                         'DeclineReason' => 'Other',
                     ]);
                 }
@@ -72,8 +68,6 @@ class Pw_qlirocheckoutOrdervalidationModuleFrontController extends ModuleFrontCo
                 $declineReason = array(
                     'DeclineReason' => $error_message
                 );
-                
-                PrestaShopLogger::addLog('Qliro One: Order Validation URL called (in postProcess) '.$all_in_stock, 1, null, null, null, true);
                 
                 if ($all_in_stock) {
                     $this->module->response(200, $page);

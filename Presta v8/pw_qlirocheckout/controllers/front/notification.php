@@ -31,7 +31,6 @@ class Pw_qlirocheckoutNotificationModuleFrontController extends ModuleFrontContr
     public function postProcess()
     {
         /**@var Pw_qlirocheckout */
-        $module = $this->module;
         $page = 'notification';
         
         // SLEEP FOR SOME SECONDS
@@ -52,18 +51,28 @@ class Pw_qlirocheckoutNotificationModuleFrontController extends ModuleFrontContr
             
             $qliro_order_transaction_id = $body['PaymentTransactionId'];
             
-            PrestaShopLogger::addLog('Qliro One: Push URL Qliro status for order '.$qliro_order_id.' is '.$qliro_order_status, 1, null, null, null, true);
-            PrestaShopLogger::addLog(json_encode($body));
-            $id_cart = Tools::getValue('id_cart');
+            $id_cart = (int) Tools::getValue('id_cart');
+            $id_shop = (int) Tools::getValue('id_shop');
+
+            $token = Tools::getValue('token');
+            if ((int)Configuration::get('QLIRO_LIVE_MODE')) {
+                $confirmation_token = $this->module->createConfirmationKey($id_cart, $id_shop, Configuration::get('QLIRO_API_PASSWORD_LIVE'));
+            } else {
+                $confirmation_token = $this->module->createConfirmationKey($id_cart, $id_shop, Configuration::get('QLIRO_API_PASSWORD_TEST'));
+            }
             
+            if ($token != $confirmation_token) {
+                exit;
+            }
+
             if ($qliro_order_notification_type == 'CustomerCheckoutStatus') {
             // THIS SHOULD NEVER HAPPEN, BUT IGNORE REQUESTS WHERE ORDER STATUS IS InProcess
                 if ($qliro_order_status != 'InProcess') {
                     
                     $sql = "SELECT *
                         FROM "._DB_PREFIX_."qlirocheckout
-                        WHERE qliro_order_id = ".$qliro_order_id;
-                    
+                        WHERE qliro_order_id = ".(int)$qliro_order_id;
+
                     $qliro = Db::getInstance()->getRow($sql);
                     
                     $id_shop = $qliro['ps_id_shop'];
@@ -101,14 +110,12 @@ class Pw_qlirocheckoutNotificationModuleFrontController extends ModuleFrontContr
                             $history->add();
                         }
                         
-                        PrestaShopLogger::addLog('Qliro One: Response to notification URL when status for Qliro order '.$qliro_order_id.' is '.$qliro_order_status, 1, null, null, null, true);
-                        
                         $id_cart = $order->id_cart;
                         $datetime = date("Y-m-d H:i:s");
                         
                         $sql = "UPDATE "._DB_PREFIX_."qlirocheckout
-                            SET qliro_status = '".$qliro_order_status."', update_date = '".$datetime."'
-                            WHERE ps_id_cart = ".$id_cart." AND ps_id_order = ".$id_order."";
+                            SET qliro_status = '".pSQL($qliro_order_status)."', update_date = '".$datetime."'
+                            WHERE ps_id_cart = ".(int)$id_cart." AND ps_id_order = ".(int)$id_order."";
                         Db::getInstance()->execute($sql);
                         $sql = 'SELECT PaymentTransactionId FROM ' . _DB_PREFIX_.'qlirocheckout_payment_transactions
                         WHERE PaymentTransactionId = ' . (int)$qliro_order_transaction_id;
@@ -133,7 +140,6 @@ class Pw_qlirocheckoutNotificationModuleFrontController extends ModuleFrontContr
                         $this->module->addOrderMessage('Order is now '.$new_status_str, $id_order);
                         $this->module->response(200, $page, array('CallbackResponse' => "received"));
                     } else { // Create order
-                        PrestaShopLogger::addLog('Qliro One: Push URL Qliro inside create order function with order id '.$qliro_order_id, 1, null, null, null, true);
                         $qliro_one_checkout_information = $this->module->getQliroCheckoutOnNotification($qliro_order_id);
                         $qliro_one_checkout_information = json_decode($qliro_one_checkout_information['response']);
                         // $qliro_customer_checkout_status = $qliro_one_checkout_information->CustomerCheckoutStatus;
@@ -161,13 +167,12 @@ class Pw_qlirocheckoutNotificationModuleFrontController extends ModuleFrontContr
                 if ($qliro_order_status == 'Success') {
                     $sql = "SELECT *
                     FROM "._DB_PREFIX_."qlirocheckout
-                    WHERE qliro_order_id = ".$qliro_order_id;
+                    WHERE qliro_order_id = ".(int)$qliro_order_id;
 
                     $qliro = Db::getInstance()->getRow($sql);
                     $id_shop = $qliro['ps_id_shop'];
                     
                     if (!(isset($qliro) && is_array($qliro) && (int)$qliro['ps_id_order'] > 0)) {
-                        PrestaShopLogger::addLog('Qliro Notification for UpsellStatus called but no order with id:'.$qliro_order_id.' found');
                         $this->module->response(200, $page, array('CallbackResponse' => "received"));
                     }
                     $order = new Order($qliro['ps_id_order']);
@@ -180,7 +185,7 @@ class Pw_qlirocheckoutNotificationModuleFrontController extends ModuleFrontContr
                             'ps_id_order' => (int)$qliro['ps_id_order'],
                             'PaymentTransactionId' => (int)$qliro_order_transaction_id,
                             'Status' => $body['Status'],
-                        ], 'PaymentTransactionId = ' . $body['OriginalPaymentTransactionId']);
+                        ], 'PaymentTransactionId = ' . (int)$body['OriginalPaymentTransactionId']);
                     } else {
                         Db::getInstance()->update('qlirocheckout_payment_transactions', [
                             'ps_id_order' => (int)$qliro['ps_id_order'],

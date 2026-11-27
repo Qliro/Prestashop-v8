@@ -23,11 +23,10 @@ class Pw_qlirocheckoutUpsellModuleFrontController extends ModuleFrontController
     public function postProcess()
     {
         /**@var Pw_qlirocheckout */
-        $module = $this->module;
         $token = Tools::getValue('token');
-        $id_cart = Tools::getValue('id_cart');
-        $id_product = Tools::getValue('id_product');
-        $id_product_attribute = Tools::getValue('id_product_attribute');
+        $id_cart = (int) Tools::getValue('id_cart');
+        $id_product = (int) Tools::getValue('id_product');
+        $id_product_attribute = (int) Tools::getValue('id_product_attribute');
         $id_shop = $this->context->shop->id;
         if ((int)Configuration::get('QLIRO_LIVE_MODE')) {
             $confirm_token = $this->module->createConfirmationKey($id_cart, $id_shop, Configuration::get('QLIRO_API_PASSWORD_LIVE'));
@@ -55,21 +54,21 @@ class Pw_qlirocheckoutUpsellModuleFrontController extends ModuleFrontController
                 'message' => $this->l('Upsell failed')
             ]));
         }
-        $country_iso = Tools::getValue('country_iso');
-        $currency_iso = Tools::getValue('currency_iso');
+        $country_iso = pSQL(Tools::getValue('country_iso'));
+        $currency_iso = pSQL(Tools::getValue('currency_iso'));
         $query = "SELECT qliro_order_id
                 FROM "._DB_PREFIX_."qlirocheckout
-                WHERE ps_id_cart = ".(int)$id_cart."
-                    AND ps_country_iso = '".$country_iso."'
-                    AND ps_currency_iso = '".$currency_iso."'
-                    AND ps_id_shop = ".$this->context->shop->id."
+                WHERE ps_id_cart = ".(int) $id_cart."
+                    AND ps_country_iso = '".pSQL($country_iso)."'
+                    AND ps_currency_iso = '".pSQL($currency_iso)."'
+                    AND ps_id_shop = ".(int) $this->context->shop->id."
                 ORDER BY update_date DESC";
                 
         $qliro_order_id = Db::getInstance()->getValue($query);
 
         //ORDER ITEM
         $row = array();
-        $product = new Product($id_product, true, $this->context->language->id);
+        $product = new Product($id_product, true, (int) $this->context->language->id);
         $merchant_reference = $product->id;
         if (strlen($merchant_reference > 200)) {
             $merchant_reference = mb_substr($merchant_reference, 0, 50);

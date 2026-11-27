@@ -36,6 +36,20 @@ class Pw_qlirocheckoutOrdermanagementstatuspushModuleFrontController extends Mod
         
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             
+            $id_cart = (int) Tools::getValue('id_cart');
+            $id_shop = (int) Tools::getValue('id_shop');
+
+            $token = Tools::getValue('token');
+            if ((int)Configuration::get('QLIRO_LIVE_MODE')) {
+                $confirmation_token = $this->module->createConfirmationKey($id_cart, $id_shop, Configuration::get('QLIRO_API_PASSWORD_LIVE'));
+            } else {
+                $confirmation_token = $this->module->createConfirmationKey($id_cart, $id_shop, Configuration::get('QLIRO_API_PASSWORD_TEST'));
+            }
+            
+            if ($token != $confirmation_token) {
+                exit;
+            }
+
             $body = json_decode(file_get_contents('php://input'), true);
             
             $qliro_order_id            = $body['OrderId'];
@@ -47,15 +61,12 @@ class Pw_qlirocheckoutOrdermanagementstatuspushModuleFrontController extends Mod
             $ProviderResultDescription = $body['ProviderResultDescription'];
             $ProviderResultCode        = $body['ProviderResultCode'];
             
-            PrestaShopLogger::addLog('Qliro One: Order Management Push, Qliro order ID '.$qliro_order_id.', Qliro status is '.$qliro_status.', Qliro type is '.$PaymentType.', PaymentTransactionId is '.$PaymentTransactionId, 1, null, null, null, true);
-            PrestaShopLogger::addLog('Ordermanagementstatuspush body: '. json_encode($body));
-           
             $PaymentType = ($PaymentType == 'Debit') ? 'Capture' : $PaymentType;
-            $order_id = Db::getInstance()->getValue("SELECT ps_id_order FROM "._DB_PREFIX_."qlirocheckout_payment_transactions WHERE PaymentTransactionId =".$PaymentTransactionId );
+            $order_id = Db::getInstance()->getValue("SELECT ps_id_order FROM "._DB_PREFIX_."qlirocheckout_payment_transactions WHERE PaymentTransactionId =".(int)$PaymentTransactionId );
             if (!$order_id) {
-                $order_id =  $order_id = Db::getInstance()->getValue("SELECT ps_id_order FROM "._DB_PREFIX_."qlirocheckout WHERE qliro_order_id = ".$qliro_order_id);
+                $order_id =  $order_id = Db::getInstance()->getValue("SELECT ps_id_order FROM "._DB_PREFIX_."qlirocheckout WHERE qliro_order_id = ".(int)$qliro_order_id);
                 if (!$order_id) {
-                    PrestaShopLogger::addLog('Qliro One: Order Management Push, Error: Could not find qliro order: '.$qliro_order_id, 3);
+                    PrestaShopLogger::addLog('Qliro One: Order Management Push, Error: Could not find qliro order: '.(int) $qliro_order_id, 3);
                     die;
                 }
                 Db::getInstance()->insert('qlirocheckout_payment_transactions',
@@ -70,7 +81,7 @@ class Pw_qlirocheckoutOrdermanagementstatuspushModuleFrontController extends Mod
                 [
                     'Status' => $qliro_status,
                     'PaymentType' => $PaymentType,
-                ], "PaymentTransactionId =".$PaymentTransactionId);
+                ], "PaymentTransactionId =".(int)$PaymentTransactionId);
             }
             
        
@@ -124,8 +135,8 @@ class Pw_qlirocheckoutOrdermanagementstatuspushModuleFrontController extends Mod
                 $datetime = date("Y-m-d H:i:s");
                 
                 $sql = "UPDATE "._DB_PREFIX_."qlirocheckout
-                        SET payment_reference = '".$payment_reference."', qliro_order_management_status = '".$qliro_order_management_status."', update_date = '".$datetime."'
-                        WHERE qliro_order_id = ".$qliro_order_id." AND ps_id_order = ".$order_id."";
+                        SET payment_reference = '".pSQL($payment_reference)."', qliro_order_management_status = '".pSQL($qliro_order_management_status)."', update_date = '".$datetime."'
+                        WHERE qliro_order_id = ".(int)$qliro_order_id." AND ps_id_order = ".(int)$order_id."";
                 
                 Db::getInstance()->execute($sql);
                         

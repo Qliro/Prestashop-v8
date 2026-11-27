@@ -23,7 +23,8 @@ class Pw_qlirocheckouthandleshippingoptionchangesModuleFrontController extends M
     public function init()
     {
         $selected_method = Tools::getValue('method');
-        $id_cart = Tools::getValue('pw_id_cart');
+        // $id_cart = (int) Tools::getValue('pw_id_cart');
+        $id_cart = (int) $this->context->cart->id;
         
         $this->qliroChangeCartShippingInformation($selected_method, $id_cart);
     }
@@ -31,7 +32,7 @@ class Pw_qlirocheckouthandleshippingoptionchangesModuleFrontController extends M
     public function qliroChangeCartShippingInformation($selected_method, $id_cart)
     {
         // GET AVAILABLE CARRRIERS
-        $all_carriers = Carrier::getCarriers($this->context->language->id, true);
+        $all_carriers = Carrier::getCarriers((int) $this->context->language->id, true);
         $selected_id_carrier = 0;
         
         // GET THE RIGHT CARRIER ID
