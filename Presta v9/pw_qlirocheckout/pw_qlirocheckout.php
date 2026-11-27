@@ -27,7 +27,7 @@ class Pw_qlirocheckout extends PaymentModule
     {
         $this->name = 'pw_qlirocheckout';
         $this->tab = 'payments_gateways';
-        $this->version = '9.0.0';
+        $this->version = '9.0.1';
         $this->author = 'Prestaworks AB';
         $this->need_instance = 0;
         $this->bootstrap = true;
@@ -2035,7 +2035,7 @@ class Pw_qlirocheckout extends PaymentModule
         
             $checkout_information['MerchantConfirmationUrl']                   = $this->context->link->getModuleLink($this->name, 'confirmation', array(), Tools::usingSecureMode()) . '?id_cart='.(int)$id_cart.'&id_shop='.$id_shop.'&country_iso='.$country_iso.'&currency_iso='.$currency_iso.'&token='.$this->createConfirmationKey($cart->id, $this->context->shop->id, $token);
             $checkout_information['MerchantCheckoutStatusPushUrl']             = $this->context->link->getModuleLink($this->name, 'notification', array(), Tools::usingSecureMode()) . '?id_cart='.(int)$id_cart.'&id_shop='.$id_shop.'&token='.$this->createConfirmationKey($cart->id, $this->context->shop->id, $token);
-            $checkout_information['MerchantOrderManagementStatusPushUrl']      = $this->context->link->getModuleLink($this->name, 'ordermanagementstatuspush', array(), Tools::usingSecureMode());
+            $checkout_information['MerchantOrderManagementStatusPushUrl']      = $this->context->link->getModuleLink($this->name, 'ordermanagementstatuspush', array(), Tools::usingSecureMode()). '?id_cart='.(int)$id_cart.'&id_shop='.$id_shop.'&token='.$this->createConfirmationKey($cart->id, $this->context->shop->id, $token);
             $checkout_information['MerchantOrderValidationUrl']                = $this->context->link->getModuleLink($this->name, 'ordervalidation', array(), Tools::usingSecureMode()) . '?id_cart='.(int)$id_cart.'&id_shop='.$id_shop.'&token='.$this->createConfirmationKey($cart->id, $this->context->shop->id, $token);
             $checkout_information['MerchantOrderAvailableShippingMethodsUrl']  = $this->context->link->getModuleLink($this->name, 'orderavailableshippingmethods', array(), Tools::usingSecureMode()) . '?id_cart='.(int)$id_cart.'&id_shop='.$id_shop.'&token='.$this->createConfirmationKey($cart->id, $this->context->shop->id, $token);
         

@@ -49,7 +49,7 @@ class Pw_qlirocheckoutOrderavailableshippingmethodsModuleFrontController extends
                 }
                 
                 if ($token != $confirmation_token) {
-                    sleep(10);
+                    exit;
                 }
             
                 $cart = new Cart($id_cart);
@@ -59,10 +59,10 @@ class Pw_qlirocheckoutOrderavailableshippingmethodsModuleFrontController extends
                 
                 $id_country = Db::getInstance()->getValue("SELECT ps_country_iso
                                                         FROM "._DB_PREFIX_."qlirocheckout
-                                                        WHERE qliro_merchant_reference = '".$merchant_reference."'
-                                                            AND qliro_order_id = ".$qliro_order_id."
-                                                            AND ps_id_shop = ".$id_shop."
-                                                            AND ps_id_cart = ".$id_cart."");
+                                                        WHERE qliro_merchant_reference = '".pSQL($merchant_reference)."'
+                                                            AND qliro_order_id = ".(int)$qliro_order_id."
+                                                            AND ps_id_shop = ".(int)$id_shop."
+                                                            AND ps_id_cart = ".(int)$id_cart."");
                 
                 if ($id_country != '') {
                     $iso_code = $id_country;
